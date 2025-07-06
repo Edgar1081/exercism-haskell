@@ -1,37 +1,31 @@
 module Darts (score) where
+import Data.Monoid
 
 score :: Float -> Float -> Int
-score x y = 1
+score x y = (points . hip x) y
 
-zero :: Float -> Maybe Int
+zero :: Float ->  Int
 zero d = case d > 10 of
-           True -> Just 0
-           _ -> Nothing
+           True -> 0
+           _ -> 0
 
-one :: Float -> Maybe Int
-one d = case d > 5 of
-           True -> Just 1
-           _ -> Nothing
+one :: Float ->  Int
+one d = case d > 5 && d <= 10 of
+           True -> 1
+           _ -> 0
 
-five :: Float -> Maybe Int
-five d = case d > 1 of
-           True -> Just 5
-           _ -> Nothing
+five :: Float ->  Int
+five d = case d > 1 && d <= 5 of
+           True -> 5
+           _ -> 0
            
-ten :: Float -> Maybe Int
-ten d = case d < 1 of
-           True -> Just 10
-           _ -> Nothing
+ten :: Float ->  Int
+ten d = case d <= 1 of
+           True -> 10
+           _ -> 0
 
-points :: Float -> Maybe Int
-points d = do
-        outside <- zero d
-        outer <- one d
-        middle <- five d
-        inner <- ten d
-
-firstJust :: [Maybe a] -> Maybe a
-firstJust =
+points :: Float -> Int
+points = getSum . foldMap (Sum .) [zero, one, five, ten]
           
 square :: Float -> Float
 square = (^2)
